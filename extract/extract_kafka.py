@@ -9,7 +9,7 @@ from pyspark.sql.types import *
 from pyspark.sql import functions as F
 
 # Конфигурация
-KAFKA_BOOTSTRAP = "kafka1:19092"          # внутренний listener
+KAFKA_BOOTSTRAP = "kafka1:19092"
 TOPICS = "amur_topic,neva_topic,ob_topic,volga_topic,yenisei_topic"
 HDFS_OUTPUT_PATH = "hdfs://namenode:9000/raw/kafka_transactions"
 CHECKPOINT_PATH = "hdfs://namenode:9000/checkpoints/kafka_raw"
