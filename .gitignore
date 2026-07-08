@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.so
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# JAR files
+*.jar
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data
+*.parquet
+*.csv
+*.json
+
+# Logs
+*.log
+
+# Конфигурация с паролями
+config.yaml
+.env
+
+# Шаблоны можно коммитить
+!config.yaml.example
+!.env.example
+
+# Airflow
+airflow/logs/
+airflow/plugins/

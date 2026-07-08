@@ -1,0 +1,29 @@
+kafka:
+  bootstrap_servers: "${KAFKA_BOOTSTRAP_SERVERS:-kafka1:19092}"
+  topics: "${KAFKA_TOPICS:-amur_topic,neva_topic,ob_topic,volga_topic,yenisei_topic}"
+  starting_offsets: "${KAFKA_STARTING_OFFSETS:-latest}"
+
+postgres:
+  url: "${POSTGRES_URL:-jdbc:postgresql://postgres:5432/retail}"
+  user: "${POSTGRES_USER:-student}"
+  password: "${POSTGRES_PASSWORD:-student_pass}"
+  tables:
+    - banks
+    - cards
+    - mcc
+    - organizations
+    - peoples
+
+hdfs:
+  raw_kafka_streaming_path: "hdfs://namenode:9000/raw/kafka_streaming"
+  raw_kafka_batch_path: "hdfs://namenode:9000/raw/kafka_batch"
+  raw_postgres_base: "hdfs://namenode:9000/raw/postgres"
+  enriched_path: "hdfs://namenode:9000/clean/enriched_transactions"
+  checkpoint_streaming: "hdfs://namenode:9000/checkpoints/kafka_streaming"
+  warehouse_dir: "hdfs://namenode:9000/warehouse"
+
+marts:
+  turnover_table: "marts.turnover"
+  top_products_table: "marts.top_products"
+  card_activity_table: "marts.card_activity"
+  card_activity_streaming_table: "marts.card_activity_streaming"
