@@ -55,3 +55,22 @@ spark.sql("SHOW TABLES IN marts").show(false)
 spark.sql("SELECT * FROM marts.turnover LIMIT 10").show(false)  
 spark.sql("SELECT * FROM marts.top_products LIMIT 10").show(false)  
 spark.sql("SELECT * FROM marts.card_activity LIMIT 10").show(false)  
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+Для запуска построения Stream витрины необходимо сделать следующее:  
+1. Запуск streaming-витрины  
+docker exec -it spark-master /spark/bin/spark-submit --master spark://spark-master:7077 --class BuildStreamingMarts --jars /tmp/spark-sql-kafka-0-10_2.12-3.2.1.jar,/tmp/kafka-clients-2.8.1.jar /opt/etl/ETL-assembly-1.0.jar  
+2. Запуск kafka-генератора  
+3. Проверка содержимого витрины  
+docker exec -it hive-server beeline -u jdbc:hive2://localhost:10000  
+USE marts;  
+SELECT COUNT(*) FROM card_activity_streaming;  
+SELECT * FROM card_activity_streaming LIMIT 10;  
+4. Для просмотра витрины (spark_shell):  
+docker exec -it spark-master /spark/bin/spark-shell  
+spark.read.parquet("hdfs://namenode:9000/marts/card_activity_streaming").show(false)  
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+Для запуска Batch экстрактора необходимо сделать следующее:  
+1. docker exec -it spark-master /spark/bin/spark-submit --master spark://spark-master:7077 --class ExtractKafkaBatch --jars /tmp/spark-sql-kafka-0-10_2.12-3.2.1.jar,/tmp/kafka-clients-2.8.1.jar /opt/etl/ETL-assembly-1.0.jar  
+2. Проверка результата:   
+docker exec -it spark-master /spark/bin/spark-shell  
+spark.read.parquet("hdfs://namenode:9000/raw/kafka_batch").show(false)  
