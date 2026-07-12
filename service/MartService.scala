@@ -76,5 +76,22 @@ class MartService {
       .orderBy(desc("total_amount"))
 
   }
+  def cardActivityStreaming(df: DataFrame): DataFrame = {
+
+    df
+      .groupBy(
+        "bank_name",
+        "payment_system",
+        "card_number"
+      )
+      .agg(
+        count("*").alias("transaction_count"),
+        round(sum("price"), 2).alias("total_amount"),
+        max("price").alias("last_transaction_amount"),
+        min("transaction_timestamp").alias("first_transaction"),
+        max("transaction_timestamp").alias("last_transaction")
+      )
+
+  }
 
 }
