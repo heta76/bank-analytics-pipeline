@@ -1,0 +1,50 @@
+# SBT
+target/
+project/target/
+project/project/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+.bsp/
+.idea_modules/
+.sbt-ide-settings
+
+# Scala
+*.class
+*.log
+
+# Spark / Hadoop
+metastore_db/
+derby.log
+checkpoints/
+
+# Airflow
+airflow/logs/
+airflow/airflow-webserver.pid
+__pycache__/
+*.pyc
+
+# Общие временные файлы
+.DS_Store
+*.swp
+*.swo
+*.tmp
+
+# JAR-файлы (не коммитим)
+*.jar
+*.war
+*.zip
+*.tar.gz
+
+# Каталоги с данными
+data/
+raw/
+clean/
+marts/
+
+# Логи
+logs/
+*.log
