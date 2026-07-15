@@ -1,0 +1,57 @@
+version: '3.7'
+services:
+  postgres-airflow:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+    volumes:
+      - postgres-airflow-data:/var/lib/postgresql/data
+    networks:
+      - disable_ipv6
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 10s
+      retries: 5
+      start_period: 5s
+
+  airflow:
+    build: .
+    container_name: airflow
+    environment:
+      # Убираем _PIP_ADDITIONAL_REQUIREMENTS, так как пакет уже установлен в Dockerfile
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres-airflow/airflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__FERNET_KEY: "0Dh5091xYXfWzUMNXlmgBmyf6EP2IY763PXDRh9eeXE="
+    volumes:
+        - ./dags:/opt/airflow/dags
+        - ./plugins:/opt/airflow/plugins
+        - ./logs:/opt/airflow/logs
+        
+        # ВМЕСТО отслеживания одного файла монтируем папку сборки целиком в /opt/etl
+        # Теперь всё, что падает в scala-2.12, сразу же оказывается в /opt/etl внутри контейнера
+        - ../target/scala-2.12:/opt/etl
+        
+        # Конфиг можно оставить так, либо закинуть его в ресурсы сборки, но пока пусть лежит отдельно:
+        - ../src/main/resources/application.conf:/opt/etl/application.conf
+    ports:
+      - "8082:8080"
+    networks:
+      - disable_ipv6
+    command: >
+      bash -c "airflow db init &&
+               (airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com || true) &&
+               airflow webserver & airflow scheduler"
+    depends_on:
+      postgres-airflow:
+        condition: service_healthy
+    restart: unless-stopped
+
+networks:
+  disable_ipv6:
+    external: true
+
+volumes:
+  postgres-airflow-data:
