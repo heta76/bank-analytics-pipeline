@@ -62,14 +62,14 @@ class MartService {
   def cardActivity(df: DataFrame): DataFrame = {
     df.groupBy(
         "bank_name",
-        "pay_system",     // исправлено
-        "masked_card"     // исправлено
+        "pay_system",
+        "masked_card"
       )
       .agg(
         count("*").alias("transaction_count"),
         round(sum("price"),2).alias("total_amount"),
-        min("ts").alias("first_transaction"),   // исправлено
-        max("ts").alias("last_transaction")     // исправлено
+        min("ts").alias("first_transaction"),
+        max("ts").alias("last_transaction")
       )
       .orderBy(desc("total_amount"))
   }

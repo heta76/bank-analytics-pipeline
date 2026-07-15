@@ -11,7 +11,7 @@ default_args = {
 with DAG(
     dag_id='etl_scala_batch',
     default_args=default_args,
-    schedule_interval='@hourly',          # каждый час
+    schedule_interval='@hourly',
     start_date=datetime(2026, 7, 14),
     catchup=False,
     tags=['scala', 'batch']
@@ -21,7 +21,7 @@ with DAG(
         task_id='extract_postgres',
         application='/opt/etl/ETL-assembly-1.0.jar',
         java_class='ExtractPostgres',
-        conn_id='spark_default',          # использует spark.master из extra
+        conn_id='spark_default',
         packages='org.postgresql:postgresql:42.5.0',
         conf={'spark.executor.memory': '1g'},
     )
@@ -39,7 +39,7 @@ with DAG(
         application='/opt/etl/ETL-assembly-1.0.jar',
         java_class='TransformEnrich',
         conn_id='spark_default',
-        files='/opt/etl/application.conf',   # конфиг передаётся через --files
+        files='/opt/etl/application.conf',
     )
 
     build_marts = SparkSubmitOperator(

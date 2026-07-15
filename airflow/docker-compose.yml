@@ -20,7 +20,6 @@ services:
     build: .
     container_name: airflow
     environment:
-      # Убираем _PIP_ADDITIONAL_REQUIREMENTS, так как пакет уже установлен в Dockerfile
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres-airflow/airflow
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
@@ -29,12 +28,8 @@ services:
         - ./dags:/opt/airflow/dags
         - ./plugins:/opt/airflow/plugins
         - ./logs:/opt/airflow/logs
-        
-        # ВМЕСТО отслеживания одного файла монтируем папку сборки целиком в /opt/etl
-        # Теперь всё, что падает в scala-2.12, сразу же оказывается в /opt/etl внутри контейнера
+
         - ../target/scala-2.12:/opt/etl
-        
-        # Конфиг можно оставить так, либо закинуть его в ресурсы сборки, но пока пусть лежит отдельно:
         - ../src/main/resources/application.conf:/opt/etl/application.conf
     ports:
       - "8082:8080"
